@@ -1,0 +1,70 @@
+{% extends 'rental/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}Sign Up - Car Rental{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-card {
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: none;
+    }
+    .auth-header {
+        background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%);
+        padding: 2.5rem 2rem;
+        color: white;
+        text-align: center;
+    }
+    .auth-body {
+        padding: 2.5rem;
+    }
+    .form-control {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-10 col-lg-8">
+        <div class="card auth-card">
+            <div class="auth-header">
+                <i class="bi bi-person-plus-fill mb-3" style="font-size: 3rem;"></i>
+                <h2 class="fw-bold mb-0">Create Account</h2>
+                <p class="mb-0 opacity-75">Join our community of car lovers today</p>
+            </div>
+            <div class="auth-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.first_name %}</div>
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.last_name %}</div>
+
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.phone_number %}</div>
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.email %}</div>
+
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.birthdate %}</div>
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.address %}</div>
+
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.password %}</div>
+                        <div class="col-md-6 mb-3">{% bootstrap_field form.confirm_password %}</div>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold">Sign Up Now</button>
+                    </div>
+                </form>
+                <div class="text-center mt-4">
+                    <p class="text-muted">Already have an account? <a href="{% url 'signin' %}" class="text-primary fw-bold text-decoration-none">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

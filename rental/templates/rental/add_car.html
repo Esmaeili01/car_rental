@@ -1,0 +1,160 @@
+{% extends 'rental/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}{% if is_edit %}Edit Car{% else %}Add Car{% endif %} - Car Rental{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-card {
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: none;
+        background: #fff;
+    }
+    .form-header {
+        background: linear-gradient(135deg, #198754 0%, #0d5a36 100%);
+        padding: 2rem;
+        color: white;
+        text-align: center;
+    }
+    .form-body {
+        padding: 2.5rem;
+    }
+    .section-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6c757d;
+        border-bottom: 2px solid #f8f9fa;
+        padding-bottom: 5px;
+        margin-bottom: 20px;
+        display: block;
+        font-weight: 700;
+    }
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+    }
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15);
+        border-color: #198754;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-lg-10">
+        <div class="card form-card">
+            <div class="form-header">
+                <i class="bi bi-car-front-fill mb-3" style="font-size: 3rem;"></i>
+                <h2 class="fw-bold mb-0">{% if is_edit %}Edit Vehicle{% else %}List Your Vehicle{% endif %}</h2>
+                <p class="mb-0 opacity-75">
+                    {% if is_edit %}
+                        Update your vehicle details
+                    {% else %}
+                        Fill in the details to start earning with your car
+                    {% endif %}
+                </p>
+            </div>
+            <div class="form-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <span class="section-label">Basic Information</span>
+                        </div>
+                        <div class="col-md-4">
+                            {% bootstrap_field form.brand %}
+                        </div>
+                        <div class="col-md-4">
+                            {% bootstrap_field form.model %}
+                        </div>
+                        <div class="col-md-4">
+                            {% bootstrap_field form.production_year %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <span class="section-label">Technical Details</span>
+                        </div>
+                        <div class="col-md-3">
+                            {% bootstrap_field form.category %}
+                        </div>
+                        <div class="col-md-3">
+                            {% bootstrap_field form.gearbox %}
+                        </div>
+                        <div class="col-md-3">
+                            {% bootstrap_field form.fuel %}
+                        </div>
+                        <div class="col-md-3">
+                            {% bootstrap_field form.seats %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.color %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.fee %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.max_days %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <span class="section-label">Location & Options</span>
+                        </div>
+                        <div class="col-md-4">
+                            {% bootstrap_field form.country %}
+                        </div>
+                        <div class="col-md-4">
+                            {% bootstrap_field form.province %}
+                        </div>
+                        <div class="col-md-4">
+                            {% bootstrap_field form.city %}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            {% bootstrap_field form.description %}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3">
+                                {% bootstrap_field form.with_driver %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3">
+                                {% bootstrap_field form.only_with_driver %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <span class="section-label">Media</span>
+                        </div>
+                        <div class="col-12">
+                            <div class="p-4 border-2 border-dashed rounded-3 text-center bg-light">
+                                <i class="bi bi-cloud-arrow-up fs-1 text-muted mb-2"></i>
+                                {% bootstrap_field form.image_path show_label=False %}
+                                <p class="small text-muted mb-0">Upload a high-quality photo of your car</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-5">
+                        <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm">
+                            <i class="bi bi-check-circle me-2"></i> {% if is_edit %}Save Changes{% else %}Publish Listing{% endif %}
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-link text-muted">Cancel and return to dashboard</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

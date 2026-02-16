@@ -1,0 +1,156 @@
+{% extends 'rental/base.html' %}
+
+{% block title %}Reports - Car Rental{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        border-radius: 15px;
+        border: none;
+        transition: transform 0.3s ease;
+        overflow: hidden;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.3;
+        position: absolute;
+        right: 20px;
+        bottom: 10px;
+    }
+    .table-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">System Analytics</h1>
+            <p class="text-muted">Overview of platform performance and activity</p>
+        </div>
+        <button class="btn btn-primary" onclick="window.print()">
+            <i class="bi bi-printer me-2"></i> Print Report
+        </button>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card stat-card bg-primary text-white h-100 position-relative">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75 fw-bold small">Total Users</h6>
+                    <h2 class="display-6 fw-bold mb-0">{{ total_users }}</h2>
+                    <i class="bi bi-people stat-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-success text-white h-100 position-relative">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75 fw-bold small">Total Vehicles</h6>
+                    <h2 class="display-6 fw-bold mb-0">{{ total_cars }}</h2>
+                    <i class="bi bi-car-front stat-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-info text-white h-100 position-relative">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75 fw-bold small">Total Rents</h6>
+                    <h2 class="display-6 fw-bold mb-0">{{ total_rents }}</h2>
+                    <i class="bi bi-calendar-check stat-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-dark text-white h-100 position-relative">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75 fw-bold small">Total Revenue</h6>
+                    <h2 class="display-6 fw-bold mb-0">${{ total_revenue|default:"0" }}</h2>
+                    <i class="bi bi-currency-dollar stat-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card table-card">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="fw-bold mb-0">Recent Activity Log</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-muted small text-uppercase">
+                                <tr>
+                                    <th class="px-4">User Details</th>
+                                    <th>Activity Type</th>
+                                    <th>Timestamp</th>
+                                    <th class="text-end px-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in recent_logins %}
+                                    <tr>
+                                        <td class="px-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-light rounded-circle p-2 me-3">
+                                                    <i class="bi bi-person text-primary"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">{{ log.user.first_name }} {{ log.user.last_name }}</div>
+                                                    <small class="text-muted">{{ log.user.phone_number }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if log.is_signup %}
+                                                <span class="badge bg-soft-success text-success border border-success border-opacity-25 px-3 py-2">
+                                                    <i class="bi bi-person-plus me-1"></i> New Registration
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-soft-primary text-primary border border-primary border-opacity-25 px-3 py-2">
+                                                    <i class="bi bi-box-arrow-in-right me-1"></i> User Login
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-muted">
+                                            {{ log.datetime|date:"M j, Y" }} <small>{{ log.datetime|date:"H:i" }}</small>
+                                        </td>
+                                        <td class="text-end px-4">
+                                            <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> Success</span>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                            No recent activity logs found.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white py-3 border-0 text-center">
+                    <a href="#" class="text-decoration-none small fw-bold">View All Activity Logs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
