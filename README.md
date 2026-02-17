@@ -92,20 +92,18 @@ Services:
 
 ## Database Notes (Important)
 
-This project currently uses some **state-only migrations** (`SeparateDatabaseAndState`) because parts of schema were edited manually.
+Schema changes for key columns (including `cars.max_days` and `users.balance`) are now enforced by migrations.
 
-That means:
-- Django migration state may be updated,
-- but some SQL changes may still need manual execution in PostgreSQL.
-
-Example issue:
-- Missing `cars.max_days` or `users.balance` in DB even after `migrate`.
-
-If missing, add manually inside DB container:
+Use:
 
 ```bash
-docker compose exec db psql -U rental_user -d car_rental_db -c "ALTER TABLE cars ADD COLUMN IF NOT EXISTS max_days INTEGER NOT NULL DEFAULT 7 CHECK (max_days >= 1);"
-docker compose exec db psql -U rental_user -d car_rental_db -c "ALTER TABLE users ADD COLUMN IF NOT EXISTS balance DECIMAL(12,2) NOT NULL DEFAULT 0;"
+python manage.py migrate
+```
+
+If running with Docker:
+
+```bash
+docker compose up --build
 ```
 
 ---
@@ -136,4 +134,3 @@ docker compose down
 - Car images are stored in `media/` (Docker volume-backed in compose).
 - Database stores paths/relations, not image binary data.
 - Current setup is suitable for development/course deployment.
-
